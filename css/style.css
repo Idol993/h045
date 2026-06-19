@@ -1105,3 +1105,26 @@ h5 { font-size: 12px; }
 #skill-bar { display:flex; gap:10px; }
 
 .action-buttons { display:flex; gap:8px; }
+
+/* ===== 录像观战界面 ===== */
+#replay-screen {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    background: #0a0a15; z-index: 50;
+}
+#replay-top-bar {
+    height: 50px; display: flex; align-items: center; justify-content: space-around;
+    background: #0f0f1a; border-bottom: 3px solid #4fc3f7; font-size: 14px;
+    font-family: 'Courier New', monospace; color: #e0e0e0;
+}
+#replay-bottom-bar {
+    height: 80px; display: flex; align-items: center; justify-content: space-between;
+    background: #0f0f1a; border-top: 3px solid #4fc3f7; padding: 0 20px; gap: 16px;
+}
+.rp-progress-wrap { flex: 1; display: flex; align-items: center; }
+.rp-progress-wrap input[type=range] { flex: 1; }
+#replay-canvas {
+    max-width: 100%; max-height: 100%;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+    box-shadow: 0 0 30px rgba(79,195,247,0.3);
+    border: 2px solid #4fc3f7;
+}

@@ -21,7 +21,7 @@
             this.selectedTowerType = null;
             this.selectedTower = null;
             this.screen = { shakeT: 0, shakeMag: 0 };
-            this.perf = new window.PerfMonitor();
+            this.perf = null;
         }
 
         init(opts) {
@@ -42,6 +42,9 @@
             this.screen.shakeT = 0;
             this.screen.shakeMag = 0;
             this.paused = false;
+            if (typeof window.PerfMonitor !== 'undefined' && this.perf == null) {
+                this.perf = new window.PerfMonitor();
+            }
 
             var self = this;
             if (window.EventBus) {
@@ -77,7 +80,7 @@
         loop(timestamp) {
             if (!this.running) return;
 
-            this.perf.beginFrame();
+            if (this.perf && typeof this.perf.beginFrame === 'function') this.perf.beginFrame();
 
             var dt = (timestamp - this.lastTime) / 1000;
             this.lastTime = timestamp;
@@ -90,7 +93,7 @@
 
             this.render();
 
-            this.perf.endFrame();
+            if (this.perf && typeof this.perf.endFrame === 'function') this.perf.endFrame();
             requestAnimationFrame(this.loop.bind(this));
         }
 

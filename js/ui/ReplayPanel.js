@@ -105,12 +105,28 @@
                 '<p><b>血量变化:</b> ' + startHp + ' → ' + endHp + ' <span style="opacity:.6">(' + (hpDiffStr || '--') + ')</span></p>' +
                 '<p><b>最终金币:</b> <span class="gold-color">$' + finalGold + '</span></p>' +
                 '<p><b>事件数:</b> ' + eventCount + '</p>' +
-                '<div style="margin-top:16px"><button class="pixel-btn primary-btn" id="rp-watch-btn">▶ 观战</button></div>';
+                '<div style="margin-top:16px"><button class="pixel-btn primary-btn" id="rp-watch-btn">▶ 开始观战</button></div>';
 
             var watchBtn = document.getElementById('rp-watch-btn');
             if (watchBtn) {
                 watchBtn.onclick = function () {
-                    alert('观战模式将在完整版中播放逐帧动画，当前为数据摘要模式，以上为统计数据。');
+                    if (typeof window.UIManager !== 'undefined' &&
+                        typeof window.UIManager.showPanel === 'function') {
+                        window.UIManager.showPanel('replay-screen');
+                    }
+                    if (typeof window.ReplayPlayer !== 'undefined') {
+                        if (!window.ReplayPlayer.canvas) {
+                            window.ReplayPlayer.init();
+                        }
+                        window.ReplayPlayer.loadReplay(data);
+                        window.ReplayPlayer.play();
+                        window.ReplayPlayer.onExit(function () {
+                            if (typeof window.UIManager !== 'undefined' &&
+                                typeof window.UIManager.showPanel === 'function') {
+                                window.UIManager.showPanel('replay-panel');
+                            }
+                        });
+                    }
                 };
             }
         }

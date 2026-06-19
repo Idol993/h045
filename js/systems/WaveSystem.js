@@ -117,12 +117,10 @@
             }
             this.spawnTimer = 0;
             EventBus.emit('wave-start', this.currentWave + 1);
-            if (window.ReplayRecorder && typeof window.ReplayRecorder.prototype.recordEvent === 'function') {
-                ReplayRecorder.recordEvent('wave_start', {
-                    wave: this.currentWave + 1,
-                    count: wave.enemies.length
-                });
-            }
+            window.ReplayRecorder.safeRecord('recordEvent', 'wave_start', {
+                wave: this.currentWave + 1,
+                count: wave.enemies.length
+            });
         }
 
         isWaveCleared() {
@@ -153,9 +151,7 @@
                 this.waveActive = false;
                 this.pendingWaves--;
                 EventBus.emit('wave-end', this.currentWave + 1);
-                if (window.ReplayRecorder && typeof window.ReplayRecorder.prototype.recordEvent === 'function') {
-                    ReplayRecorder.recordEvent('wave_end', { wave: this.currentWave + 1 });
-                }
+                window.ReplayRecorder.safeRecord('recordEvent', 'wave_end', { wave: this.currentWave + 1 });
                 GameEngine.addGold(20 + this.currentWave * 5);
             }
         }

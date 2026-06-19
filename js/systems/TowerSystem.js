@@ -53,9 +53,7 @@
                 life: 0.4,
                 size: 2
             });
-            if (window.ReplayRecorder && typeof window.ReplayRecorder.prototype.recordEvent === 'function') {
-                ReplayRecorder.recordEvent('tower_place', { id: tower.id, type: type, gx: gx, gy: gy });
-            }
+            window.ReplayRecorder.safeRecord('recordEvent', 'tower_place', { id: tower.id, type: type, gx: gx, gy: gy });
             return true;
         }
 
@@ -102,6 +100,7 @@
             this._unregisterSpatial(tower);
             GameEngine.addGold(tower.sellValue());
             EventBus.emit('tower-removed', tower);
+            window.ReplayRecorder.safeRecord('recordEvent', 'tower_remove', {id: tower.id, gx: tower.gx, gy: tower.gy});
         }
 
         getTowerAt(gx, gy) {

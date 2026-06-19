@@ -109,9 +109,7 @@
             window.GameEngine.addGold(goldDrop);
             window.ParticleSystem.spawnDamageText(this.x, this.y - 20, '+' + goldDrop, '#ffd700');
             window.ParticleSystem.spawnBurst(this.x, this.y, this.color, 12);
-            if (window.ReplayRecorder) {
-                window.ReplayRecorder.recordEnemyDeath(this.id, window.GameEngine.elapsed);
-            }
+            window.ReplayRecorder.safeRecord('recordEnemyDeath', this.id, window.GameEngine.elapsed);
             window.EnemySystem.onEnemyDeath(this);
         }
 
@@ -120,6 +118,7 @@
             window.GameEngine.takeDamage(dmg);
             this._active = false;
             window.ParticleSystem.spawnBurst(this.x, this.y, '#f44336', 6);
+            window.ReplayRecorder.safeRecord('recordEnemyDeath', this.id, window.GameEngine.elapsed, 'reach_end');
             window.EnemySystem.onEnemyDeath(this);
         }
 

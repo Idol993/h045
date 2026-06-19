@@ -160,7 +160,7 @@
         for (var c3 = 9; c3 <= 13; c3++) path.push([6, c3]);
         for (var r3 = 7; r3 <= 11; r3++) path.push([r3, 13]);
         for (var c4 = 14; c4 <= 18; c4++) path.push([11, c4]);
-        for (var r4 = 10; r2 >= 3; r4--) path.push([r4, 18]);
+        for (var r4 = 10; r4 >= 3; r4--) path.push([r4, 18]);
         if (path[path.length - 1][0] !== 3) {
             for (var r5 = path[path.length - 1][0] - 1; r5 >= 3; r5--) path.push([r5, 18]);
         }

@@ -2,7 +2,7 @@
 (function () {
     var PANEL_IDS = [
         'main-menu', 'level-select', 'trial-panel', 'leaderboard-panel',
-        'replay-panel', 'game-screen', 'result-modal', 'tower-popup'
+        'replay-panel', 'replay-screen', 'game-screen', 'result-modal', 'tower-popup'
     ];
 
     class UIManager {
@@ -63,7 +63,7 @@
                 if (k === 'ESCAPE') {
                     self.cancelTowerPlacement();
                 }
-                if (k === 'Q' || k === 'E' || k === 'R') {
+                if (k === 'Q' || k === 'R') {
                     var cv = document.getElementById('game-canvas');
                     if (cv && typeof window.SkillSystem !== 'undefined') {
                         var rect = cv.getBoundingClientRect();
@@ -73,6 +73,29 @@
                         var my = (e.clientY - rect.top) * scaleY;
                         window.SkillSystem.castByKey(k, mx, my);
                         self.refreshSkillUI();
+                    }
+                } else if (k === 'E') {
+                    if (window.GameEngine) {
+                        if (window.GameEngine.aimingRocket) {
+                            window.GameEngine.aimingRocket = false;
+                            if (typeof window.SkillSystem !== 'undefined') {
+                                window.SkillSystem.setRocketCursor(0, 0, false);
+                            }
+                        } else if (typeof window.SkillSystem !== 'undefined' && 
+                                   window.SkillSystem.skills && 
+                                   window.SkillSystem.skills.rocket &&
+                                   window.SkillSystem.skills.rocket.isReady) {
+                            window.GameEngine.aimingRocket = true;
+                            var cv2 = document.getElementById('game-canvas');
+                            if (cv2) {
+                                var rect2 = cv2.getBoundingClientRect();
+                                var scaleX2 = 800 / rect2.width;
+                                var scaleY2 = 512 / rect2.height;
+                                var mx2 = (e.clientX - rect2.left) * scaleX2;
+                                var my2 = (e.clientY - rect2.top) * scaleY2;
+                                window.SkillSystem.setRocketCursor(mx2, my2, true);
+                            }
+                        }
                     }
                 }
                 if (k === ' ') {
@@ -459,13 +482,40 @@
             if (saveReplayBtn) {
                 saveReplayBtn.onclick = function () {
                     if (typeof window.ReplayRecorder !== 'undefined') {
-                        var data = stats._replayData;
-                        if (!data && self._replayRecorder) {
-                            data = self._replayRecorder.stop(win ? 'win' : 'lose', stats);
-                        }
-                        if (data) {
-                            var rec = new window.ReplayRecorder();
-                            rec.exportJSON(data);
+                        try {
+                            var data = stats._replayData;
+                            if (!data && self._replayRecorder) {
+                                data = self._replayRecorder.stop(win ? 'win' : 'lose', stats);
+                            }
+                            if (!data) {
+                                var rec = new window.ReplayRecorder();
+                                data = {
+                                    version: 1,
+                                    levelId: stats.levelId,
+                                    challengeCode: stats.challengeCode,
+                                    duration: stats.duration || 0,
+                                    result: win ? 'win' : 'lose',
+                                    frames: [],
+                                    enemies: [],
+                                    startHp: stats.startHp,
+                                    endHp: stats.endHp,
+                                    finalGold: stats.finalGold,
+                                    wavesDone: stats.wavesDone,
+                                    totalWaves: stats.totalWaves,
+                                    isTrial: stats.isTrial
+                                };
+                            } else {
+                                if (data.startHp == null && stats.startHp != null) data.startHp = stats.startHp;
+                                if (data.endHp == null && stats.endHp != null) data.endHp = stats.endHp;
+                                if (data.finalGold == null && stats.finalGold != null) data.finalGold = stats.finalGold;
+                                if (data.totalWaves == null && stats.totalWaves != null) data.totalWaves = stats.totalWaves;
+                            }
+                            if (data) {
+                                var expRec = new window.ReplayRecorder();
+                                expRec.exportJSON(data);
+                            }
+                        } catch (e) {
+                            alert('保存录像失败：' + (e && e.message ? e.message : String(e)));
                         }
                     }
                 };

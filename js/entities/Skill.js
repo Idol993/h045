@@ -25,9 +25,7 @@
             this.cd = this.config.cd;
             this.castingFlash = 0.5;
             this.applyEffect(mouseX, mouseY);
-            if (window.ReplayRecorder) {
-                window.ReplayRecorder.recordEvent('skill_cast', { skill: this.type, x: mouseX, y: mouseY });
-            }
+            window.ReplayRecorder.safeRecord('recordEvent', 'skill_cast', { skill: this.type, x: mouseX, y: mouseY });
             window.EventBus.emit('skill-cast', this.type);
             return true;
         }

@@ -18,6 +18,7 @@
         this.running = true;
         this.levelId = levelId;
         this.challengeCode = challengeCode;
+        ReplayRecorder.setInstance(this);
     };
 
     ReplayRecorder.prototype._getElapsed = function () {
@@ -67,6 +68,7 @@
     };
 
     ReplayRecorder.prototype.stop = function (result, stats) {
+        if (window.ReplayRecorder) ReplayRecorder.setInstance(null);
         this.running = false;
         var duration = this._getElapsed();
         var enemiesArr = [];
@@ -121,6 +123,22 @@
             };
             reader.readAsText(file);
         });
+    };
+
+    ReplayRecorder.safeRecord = function (methodName) {
+        try {
+            if (typeof window.ReplayRecorder === 'undefined') return;
+            var rec = window.ReplayRecorder._instance || null;
+            if (!rec || !rec.running) return;
+            var args = Array.prototype.slice.call(arguments, 1);
+            if (typeof rec[methodName] === 'function') {
+                rec[methodName].apply(rec, args);
+            }
+        } catch (e) {
+        }
+    };
+    ReplayRecorder.setInstance = function (rec) {
+        window.ReplayRecorder._instance = rec;
     };
 
     window.ReplayRecorder = ReplayRecorder;

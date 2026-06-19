@@ -55,9 +55,7 @@
             this.activeEnemies.push(enemy);
             this.spawnCount++;
 
-            if (window.ReplayRecorder && typeof window.ReplayRecorder.prototype.recordEnemySpawn === 'function') {
-                ReplayRecorder.recordEnemySpawn(enemy.id, type, GameEngine.elapsed);
-            }
+            window.ReplayRecorder.safeRecord('recordEnemySpawn', enemy.id, type, window.GameEngine.elapsed);
 
             enemy._nextLogT = 0.2;
             return enemy;
@@ -91,12 +89,10 @@
                 var e = this.activeEnemies[i];
                 e.update(dt);
 
-                if (window.ReplayRecorder && ReplayRecorder.running) {
-                    e._nextLogT -= dt;
-                    if (e._nextLogT <= 0) {
-                        e._nextLogT = 0.2;
-                        ReplayRecorder.recordEnemyPos(e.id, GameEngine.elapsed, e.x, e.y);
-                    }
+                e._nextLogT -= dt;
+                if (e._nextLogT <= 0) {
+                    e._nextLogT = 0.2;
+                    window.ReplayRecorder.safeRecord('recordEnemyPos', e.id, window.GameEngine.elapsed, e.x, e.y);
                 }
             }
         }

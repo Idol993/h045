@@ -52,9 +52,7 @@
             this.totalCost += cost;
             this.sprite = window.SpriteFactory.generateTowerSprite(this.type, this.level + 1);
             window.EventBus.emit('gold-change', window.GameEngine.state.gold);
-            if (window.ReplayRecorder) {
-                window.ReplayRecorder.recordEvent('tower_upgrade', { gx: this.gx, gy: this.gy, level: this.level + 1 });
-            }
+            window.ReplayRecorder.safeRecord('recordEvent', 'tower_upgrade', { gx: this.gx, gy: this.gy, level: this.level + 1 });
             return true;
         }
 
