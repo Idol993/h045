@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>像素塔防 - Pixel Tower Defense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+
+        <!-- ===== 主菜单 ===== -->
+        <div id="main-menu" class="panel">
+            <h1 class="title">像素塔防</h1>
+            <p class="subtitle">PIXEL TOWER DEFENSE</p>
+            <div class="menu-buttons">
+                <button class="pixel-btn" id="mm-start-btn">🎮 开始游戏</button>
+                <button class="pixel-btn" id="mm-level-btn">🗺️ 选择关卡</button>
+                <button class="pixel-btn" id="mm-trial-btn">⚔️ 试炼模式</button>
+                <button class="pixel-btn" id="mm-leaderboard-btn">🏆 排行榜</button>
+                <button class="pixel-btn" id="mm-replay-btn">📼 录像观战</button>
+            </div>
+            <div class="menu-footer">
+                <span>v1.0.0 | 提示:Q/E/R释放技能,空格开始波次,ESC取消,右键/P暂停</span>
+            </div>
+        </div>
+
+        <!-- ===== 关卡选择 ===== -->
+        <div id="level-select" class="panel hidden">
+            <h2>🗺️ 选择关卡</h2>
+            <div class="level-grid" id="level-grid"></div>
+            <button class="pixel-btn back-btn" id="ls-back-btn">← 返回</button>
+        </div>
+
+        <!-- ===== 试炼模式 ===== -->
+        <div id="trial-panel" class="panel hidden">
+            <h2>⚔️ 试炼模式</h2>
+            <div class="trial-config">
+                <div class="config-row">
+                    <label>波次数量 (1-20)</label>
+                    <input type="range" id="trial-wave-count" min="1" max="20" value="10">
+                    <span id="trial-wave-val">10</span>
+                </div>
+                <div class="config-row">
+                    <label>每波敌人数量 (1-50)</label>
+                    <input type="range" id="trial-count-slider" min="1" max="50" value="15">
+                    <span id="trial-count-val">15</span>
+                </div>
+                <div class="config-section">
+                    <h4>敌人类型比例 (%)</h4>
+                    <div class="config-row">
+                        <label style="color:#4caf50">● 普通 Normal</label>
+                        <input type="range" id="t-ratio-normal" min="0" max="100" value="50">
+                        <span id="t-ratio-normal-val">50%</span>
+                    </div>
+                    <div class="config-row">
+                        <label style="color:#ffeb3b">● 快速 Fast</label>
+                        <input type="range" id="t-ratio-fast" min="0" max="100" value="25">
+                        <span id="t-ratio-fast-val">25%</span>
+                    </div>
+                    <div class="config-row">
+                        <label style="color:#1976d2">● 坦克 Tank</label>
+                        <input type="range" id="t-ratio-tank" min="0" max="100" value="15">
+                        <span id="t-ratio-tank-val">15%</span>
+                    </div>
+                    <div class="config-row">
+                        <label style="color:#9c27b0">● 精英 Elite</label>
+                        <input type="range" id="t-ratio-elite" min="0" max="100" value="10">
+                        <span id="t-ratio-elite-val">10%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="trial-code-section">
+                <div class="code-row">
+                    <button class="pixel-btn small-btn" id="trial-generate-btn">📤 生成挑战码</button>
+                    <button class="pixel-btn small-btn" id="trial-copy-btn">📋 复制</button>
+                </div>
+                <textarea id="trial-code-output" readonly rows="2" placeholder="挑战码将显示在此..."></textarea>
+                <div class="code-row">
+                    <textarea id="trial-code-input" rows="2" placeholder="粘贴好友的挑战码..."></textarea>
+                    <button class="pixel-btn small-btn" id="trial-load-btn">📥 加载</button>
+                </div>
+            </div>
+            <div class="trial-buttons">
+                <button class="pixel-btn back-btn" id="trial-back-btn">← 返回</button>
+                <button class="pixel-btn primary-btn" id="trial-start-btn">▶ 开始试炼</button>
+            </div>
+        </div>
+
+        <!-- ===== 排行榜 ===== -->
+        <div id="leaderboard-panel" class="panel hidden">
+            <h2>🏆 排行榜 TOP 20</h2>
+            <div class="leaderboard-table-wrap">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th style="width:12%">排名</th>
+                            <th style="width:18%">关卡</th>
+                            <th style="width:22%">剩余血量</th>
+                            <th style="width:20%">用时</th>
+                            <th style="width:28%">日期</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-tbody">
+                        <tr><td colspan="5" class="empty-row">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="lb-buttons">
+                <button class="pixel-btn danger-btn small-btn" id="lb-clear-btn">🗑️ 清空记录</button>
+                <button class="pixel-btn back-btn" id="lb-back-btn">← 返回</button>
+            </div>
+        </div>
+
+        <!-- ===== 录像观战 ===== -->
+        <div id="replay-panel" class="panel hidden">
+            <h2>📼 录像系统</h2>
+            <div id="rp-info" class="rp-info"></div>
+            <div class="rp-buttons">
+                <button class="pixel-btn" id="rp-import-btn">📂 导入录像</button>
+            </div>
+            <div class="rp-back">
+                <button class="pixel-btn back-btn" id="rp-back-btn">← 返回</button>
+            </div>
+        </div>
+
+        <!-- ===== 游戏主界面 ===== -->
+        <div id="game-screen" class="hidden">
+            <!-- 顶部状态栏 -->
+            <div id="top-bar">
+                <div class="stat-item"><span class="gold-color">💰</span> <span id="gold-val">0</span></div>
+                <div class="stat-item hp-wrap">
+                    <span class="hp-color">❤️</span>
+                    <span id="hp-val">0</span>
+                    <div class="hp-bar"><div class="hp-bar-fill" id="hp-bar-fill" style="width:100%"></div></div>
+                </div>
+                <div class="stat-item">🌊 波次: <span id="wave-val">0/0</span></div>
+                <div class="stat-item">📍 <span id="level-val">第1关</span></div>
+                <div class="stat-item">⏱️ <span id="time-val">00:00</span></div>
+            </div>
+
+            <!-- Canvas 游戏画布 -->
+            <div class="canvas-wrap">
+                <canvas id="game-canvas" width="1600" height="1024"></canvas>
+            </div>
+
+            <!-- 底部操作栏 -->
+            <div id="bottom-bar">
+                <!-- 塔选择栏 -->
+                <div id="tower-bar"></div>
+
+                <!-- 技能栏 -->
+                <div id="skill-bar">
+                    <button class="skill-btn" data-type="freeze" title="冰冻减速 (Q)">
+                        <canvas class="skill-canvas" width="64" height="64"></canvas>
+                        <div class="cd-mask" style="height:0%"></div>
+                        <span class="key-label">Q</span>
+                    </button>
+                    <button class="skill-btn" data-type="rocket" title="火箭轰击 (E)">
+                        <canvas class="skill-canvas" width="64" height="64"></canvas>
+                        <div class="cd-mask" style="height:0%"></div>
+                        <span class="key-label">E</span>
+                    </button>
+                    <button class="skill-btn" data-type="heal" title="治疗光环 (R)">
+                        <canvas class="skill-canvas" width="64" height="64"></canvas>
+                        <div class="cd-mask" style="height:0%"></div>
+                        <span class="key-label">R</span>
+                    </button>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="action-buttons">
+                    <button class="pixel-btn" id="wave-btn">▶ 开始第 1 波 (空格)</button>
+                    <button class="pixel-btn" id="pause-btn">⏸ 暂停</button>
+                    <button class="pixel-btn danger-btn" id="menu-btn">🏠 菜单</button>
+                </div>
+            </div>
+
+            <!-- 塔升级弹窗 -->
+            <div id="tower-popup" class="tower-popup hidden"></div>
+        </div>
+
+        <!-- ===== 结算弹窗 ===== -->
+        <div id="result-modal" class="result-modal hidden">
+            <div class="result-content">
+                <h2 class="result-title">胜利！</h2>
+                <div class="result-stats"></div>
+                <div class="result-buttons">
+                    <button class="pixel-btn" id="result-retry-btn">🔄 重新挑战</button>
+                    <button class="pixel-btn primary-btn" id="result-save-replay-btn">💾 保存录像</button>
+                    <button class="pixel-btn" id="result-back-btn">🏠 返回菜单</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 按依赖顺序加载JS -->
+    <script src="js/config/towerConfig.js"></script>
+    <script src="js/config/enemyConfig.js"></script>
+    <script src="js/config/skillConfig.js"></script>
+    <script src="js/config/levelConfig.js"></script>
+
+    <script src="js/core/EventBus.js"></script>
+    <script src="js/core/ObjectPool.js"></script>
+    <script src="js/core/GameEngine.js"></script>
+
+    <script src="js/utils/MathUtil.js"></script>
+    <script src="js/utils/PerfMonitor.js"></script>
+    <script src="js/utils/ChallengeCodec.js"></script>
+    <script src="js/utils/ReplayRecorder.js"></script>
+
+    <script src="js/data/IndexedDBManager.js"></script>
+    <script src="js/data/SaveManager.js"></script>
+
+    <script src="js/render/SpriteFactory.js"></script>
+    <script src="js/render/ParticleSystem.js"></script>
+    <script src="js/render/CanvasRenderer.js"></script>
+
+    <script src="js/map/GameMap.js"></script>
+    <script src="js/map/PathManager.js"></script>
+
+    <script src="js/entities/Tower.js"></script>
+    <script src="js/entities/Enemy.js"></script>
+    <script src="js/entities/Projectile.js"></script>
+    <script src="js/entities/Skill.js"></script>
+
+    <script src="js/systems/TowerSystem.js"></script>
+    <script src="js/systems/EnemySystem.js"></script>
+    <script src="js/systems/SkillSystem.js"></script>
+    <script src="js/systems/WaveSystem.js"></script>
+
+    <script src="js/ui/UIManager.js"></script>
+    <script src="js/ui/MainMenu.js"></script>
+    <script src="js/ui/LevelSelect.js"></script>
+    <script src="js/ui/TrialMode.js"></script>
+    <script src="js/ui/Leaderboard.js"></script>
+    <script src="js/ui/ReplayPanel.js"></script>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
