@@ -112,14 +112,20 @@
             var cumT = 0;
             for (var i = 0; i < wave.enemies.length; i++) {
                 var e = wave.enemies[i];
-                cumT += (e.interval || 0.8);
-                this.spawnQueue.push({ type: e.type, t: cumT });
+                var count = e.count || 1;
+                var interval = e.interval || 0.8;
+                for (var j = 0; j < count; j++) {
+                    cumT += interval;
+                    this.spawnQueue.push({ type: e.type, t: cumT });
+                }
             }
             this.spawnTimer = 0;
+            this.totalSpawnCount = this.spawnQueue.length;
+            this.spawnedCount = 0;
             EventBus.emit('wave-start', this.currentWave + 1);
             window.ReplayRecorder.safeRecord('recordEvent', 'wave_start', {
                 wave: this.currentWave + 1,
-                count: wave.enemies.length
+                count: this.spawnQueue.length
             });
         }
 

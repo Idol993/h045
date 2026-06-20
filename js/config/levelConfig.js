@@ -336,21 +336,21 @@
             if (w < 2) {
                 enemies.push({ type: 'normal', count: waveCount, interval: 0.8 });
             } else if (w < 4) {
-                enemies.push({ type: 'normal', count: Math.floor(waveCount * 0.6), interval: 0.7 });
-                enemies.push({ type: 'fast', count: Math.floor(waveCount * 0.4), interval: 0.5 });
+                enemies.push({ type: 'normal', count: Math.max(1, Math.floor(waveCount * 0.6)), interval: 0.7 });
+                enemies.push({ type: 'fast', count: Math.max(1, Math.floor(waveCount * 0.4)), interval: 0.5 });
             } else if (w < 6) {
-                enemies.push({ type: 'normal', count: Math.floor(waveCount * 0.4), interval: 0.7 });
-                enemies.push({ type: 'fast', count: Math.floor(waveCount * 0.4), interval: 0.5 });
+                enemies.push({ type: 'normal', count: Math.max(1, Math.floor(waveCount * 0.4)), interval: 0.7 });
+                enemies.push({ type: 'fast', count: Math.max(1, Math.floor(waveCount * 0.4)), interval: 0.5 });
                 enemies.push({ type: 'tank', count: Math.max(1, Math.floor(waveCount * 0.15)), interval: 1.2 });
             } else if (w < 8) {
-                enemies.push({ type: 'fast', count: Math.floor(waveCount * 0.35), interval: 0.5 });
-                enemies.push({ type: 'tank', count: Math.floor(waveCount * 0.25), interval: 1.2 });
+                enemies.push({ type: 'fast', count: Math.max(1, Math.floor(waveCount * 0.35)), interval: 0.5 });
+                enemies.push({ type: 'tank', count: Math.max(1, Math.floor(waveCount * 0.25)), interval: 1.2 });
                 enemies.push({ type: 'elite', count: Math.max(1, Math.floor(waveCount * 0.2)), interval: 1.0 });
-            } else if (w < numWaves - (hasBoss ? 1 : 0)) {
-                enemies.push({ type: 'normal', count: Math.floor(waveCount * 0.3), interval: 0.6 });
-                enemies.push({ type: 'fast', count: Math.floor(waveCount * 0.3), interval: 0.4 });
-                enemies.push({ type: 'tank', count: Math.floor(waveCount * 0.2), interval: 1.0 });
-                enemies.push({ type: 'elite', count: Math.floor(waveCount * 0.2), interval: 0.9 });
+            } else {
+                enemies.push({ type: 'normal', count: Math.max(1, Math.floor(waveCount * 0.3)), interval: 0.6 });
+                enemies.push({ type: 'fast', count: Math.max(1, Math.floor(waveCount * 0.3)), interval: 0.4 });
+                enemies.push({ type: 'tank', count: Math.max(1, Math.floor(waveCount * 0.2)), interval: 1.0 });
+                enemies.push({ type: 'elite', count: Math.max(1, Math.floor(waveCount * 0.2)), interval: 0.9 });
             }
 
             waves.push({
